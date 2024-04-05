@@ -141,14 +141,75 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
 
 
 
-### 综述
+#### 综述
 ``
 
-### 图片分类
+#### 图片分类
 
 
 ### LLM(NLP)
+在LLM之下的active learning的应用，在近几年也是有比较多的论文关注于在LLM模型的active learning sampling的情况。
+因为时间限制，作者先从finetuning的方向来引荐有关active learning的论文:
+(请注意，这里的active learning 使用了非常广泛的概念，即只要是一种挑选样本的策略，作者这里都把其归类到active learning的概念里面,即使文章没有提及active learning的概念)
+
+- `ACL 24 在投` **STAR: Constraint LoRA with Dynamic Active Learning for Data-Efficient Fine-Tuning of Large Language Models** [[paper](https://arxiv.org/pdf/2403.01165.pdf)[[code]][Linhai Zhang,Jialong Wu,Deyu Zhou ,Guoqiang Xu]-[![](https://img.shields.io/badge/PendingReview-e2fbbe)]()：**这篇文章认为在PFET和MEFT高效微调形式外，LLMs微调中被忽视的因素之一是任务的固有复杂性，微调LLMs所需的人工标注资源也很重要。所以说DFET(Data Efficient Fine-TUning)基于样本选择的高效微调方式也十分重要，而且是第一篇在LLM推理领域使用传统意义上的active learning方法(需要k次迭代分别选样本)与PFET方法(Lora) 结合达到DEFT的目的。本文指出之前盲目直接结合PEFT+al效果不好（不确定性差距和模型校准不佳）故提出了一种新型的DEFT 方法 STAR(conStrainT LoRA with dynamic Active leaRning)：**
+
+  **总体定义：**
+  这是一种有效整合基于不确定性的主动学习和LoRA的新方法改善盲目结合方法的缺陷:
+  - 针对**不确定性差距**，作者引入了一种**动态不确定性测量**，它在主动学习迭代过程中结合了基础模型和完整模型的不确定性。
+  - 对于**模型校准不佳**，在LoRA训练过程中引入了**混合正则化方法**，以**防止模型过于自信**，并采用**蒙特卡洛dropout机制**来增强不确定性估计。
+  
+  **总体方法流程：**
+    ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/f2655973-edd1-476b-a6a8-e3e5dc7c6f05)
+    ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/2d6cf0c7-12da-406c-859b-07253eae3d42)
+
+
+    1. 模型推断：利用当前模型 $M_k$ 对未标记数据集 $D^U_{k}$ 进行推断。
+    2. 数据查询：基于动态不确定性估计方法，选择最具信息量的示例，形成子集 $S^U_k$。
+    3. 数据标记：对未标记子集 $S^U_k$ 进行标记，形成标记子集 $S^L_k$ 。
+    4. 数据集更新：通过将标记子集追加到已标记数据集 $D^L_k$ 中更新已标记数据集 $D^U_{k+1} = D^U_{k} \cup S^L_{k}$ 。
+    5. 模型训练：利用新标记数据集 $D^U_{k}$ 更新当前模型，得到下一次迭代的模型 $M_{k+1}$ 。
+ 
+  **具体算法：**
+   - **不确定性测量：**
+     最大熵（ME）和预测熵（PE）都是用来评估模型预测的不确定性的指标，但它们在方法和所包含的信息方面有所不同。
+
+        最大熵（ME）以其与黄金响应的独立性为特征。它通过计算所有可能结果的熵，定量评估模型预测的不确定性，公式如下：
+     
+        $$
+\text{ME}(s, x) = - \sum_{i=1}^{N} \sum_{j=1}^{V} p(v_{ij}|s<i, x) \log p(v_{ij}|s<i, x)
+$$
+
+        其中，\( s \) 是生成的响应，\( p(v_{ij}|s<i, x) \) 是在 \( s \) 的第 \( i \) 个元素中词汇表的第 \( j \) 个标记的概率，\( V \) 是词汇表的大小。
+        预测熵（PE）融入了对黄金响应的依赖性，提供了给定预测分布的真实标签的预期信息增益的度量，其公式如下：
+        \[ PE(s, x) = - \log p(s|x) = \sum_{i=1}^{N} - \log p(z_i|s<i, x) \]
+        其中，\( s \) 是黄金响应，\( p(z_i|s<i, x) \) 是在黄金响应的第 \( i \) 个标记的概率。
+        因此，ME和PE都用于评估模型预测的不确定性，但ME独立于真实标签，而PE考虑了真实标签的影响。
+     
+   - **动态不确定性测量(Dynamic Uncertainty Measurement)：**
+     ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/152198b7-f797-41fd-ae2f-fc77c9654fc4)
+     简单来说 样本不确定性的测量的指标由基础模型跟当前微调模型加权得到，随着迭代次数提高，基础模型权重更低，而当前微调模型权重更高
+
+   - **混合正则化方法进行模型校准(Calibration with Hybrid Regularization):**
+     对零初始化B矩阵，使用L2范数权重衰减
+     ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/08beaba8-081c-4e1e-be28-c0cf30a41254)
+
+     对高斯随机初始化的A矩阵，使用蒙特卡洛dropout机制
+     ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/48d8756d-1000-476a-ac84-52a2a573abf6)
+
+
+      
+ 
+
+       
+- 
+
+
+
+
+
 ### L2D(Learning_to_defer)
+
   
 
 
