@@ -226,7 +226,23 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
 
    **更多信息可以参考:https://zhuanlan.zhihu.com/p/664562587**
 
-    - `arXiv 23` ****
+    - `arXiv 23` **MoDS: Model-oriented Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/CASIA-LM/MoDS)[Qianlong Du, Chengqing Zong and Jiajun Zhang] **MoDS方法主要通过质量、覆盖范围、必要性三个指标来进行数据的筛选，其中数据质量是为了保证所选的指令数据的问题和答案都足够好；数据覆盖范围是为了让所选择的数据中指令足够多样、涉及知识范围更广；数据必要性是选择对于大模型较复杂、较难或不擅长的数据以填补大模型能力的空白。**
+      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/7ced16b0-1128-4b09-9289-373e6bcfbd22)
+
+          - 质量筛选：对于数据进行质量过滤时，采用OpenAssistant的reward-model-debertav3-large-v2模型（一个基于DeBERTa架构设计的奖励模型）对数据进行质量打分。 讲原始数据的Instruction、Input、Output的三个部分进行拼接，送入到奖励模型中，得到一个评分，当评分超过α时，则认为数据质量达标，构建一份高质量数据集-Data1。
+      
+          - 多样性筛选：为了避免所选质量数据高度相似，通过K-Center-Greedy算法进行数据筛选，在最大化多样性的情况下，使指令数据集最小。获取种子指令数据集（Seed Instruction Data）-SID。
+      
+          - 必要性筛选：不同的大型语言模型在预训练过程中所学到的知识和具有的能力不同，因此在对不同的大型语言模型进行指令微调时，所需的指令数据也需要不同。
+                -   对于一条指令，如果给定的大型语言模型本身能够生成较好的回答，则说明给定的大型语言模型具有处理该指令或者这类指令的能力，反之亦然，并且哪些不能处理的指令对于模型微调来说更为重要。
+                -  使用SID数据集对模型进行一个初始训练
+                -  用训练好的初始模型对整个高质数据集-Data1中的指令进行结果预测
+                -  利用奖励模型对结果进行评分，当分值小于β时，说明初始模型不能对这些指令生成优质的回复，不具有处理这些类型指令的能力，获取必要性数据集-Data2
+                -  对Data2进行多样性筛选，获取增强指令数据集（Augmented Instruction Data）-AID
+
+          - 最终利用种子指令数据集和增强指令数据集一起对模型进行指令微调，获得最终模型。
+
+   - `arXiv 23` **MoDS: Model-oriented Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/CASIA-LM/MoDS)[Qianlong Du, Chengqing Zong and Jiajun Zhang] **MoDS方法主要通过质量、覆盖范围、必要性三个指标来进行数据的筛选，其中数据质量是为了保证所选的指令数据的问题和答案都足够好；数据覆盖范围是为了让所选择的数据中指令足够多样、涉及知识范围更广；数据必要性是选择对于大模型较复杂、较难或不擅长的数据以填补大模型能力的空白。**
 
 
 
