@@ -226,7 +226,7 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
 
    **更多信息可以参考:https://zhuanlan.zhihu.com/p/664562587**
 
-    - `arXiv 23` **MoDS: Model-oriented Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/CASIA-LM/MoDS)[Qianlong Du, Chengqing Zong and Jiajun Zhang] **MoDS方法主要通过质量、覆盖范围、必要性三个指标来进行数据的筛选，其中数据质量是为了保证所选的指令数据的问题和答案都足够好；数据覆盖范围是为了让所选择的数据中指令足够多样、涉及知识范围更广；数据必要性是选择对于大模型较复杂、较难或不擅长的数据以填补大模型能力的空白。**
+- `arXiv 23` **MoDS: Model-oriented Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/CASIA-LM/MoDS)[Qianlong Du, Chengqing Zong and Jiajun Zhang] **MoDS方法主要通过质量、覆盖范围、必要性三个指标来进行数据的筛选，其中数据质量是为了保证所选的指令数据的问题和答案都足够好；数据覆盖范围是为了让所选择的数据中指令足够多样、涉及知识范围更广；数据必要性是选择对于大模型较复杂、较难或不擅长的数据以填补大模型能力的空白。**
       ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/7ced16b0-1128-4b09-9289-373e6bcfbd22)
 
           - 质量筛选：对于数据进行质量过滤时，采用OpenAssistant的reward-model-debertav3-large-v2模型（一个基于DeBERTa架构设计的奖励模型）对数据进行质量打分。 讲原始数据的Instruction、Input、Output的三个部分进行拼接，送入到奖励模型中，得到一个评分，当评分超过α时，则认为数据质量达标，构建一份高质量数据集-Data1。
@@ -242,7 +242,16 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
 
           - 最终利用种子指令数据集和增强指令数据集一起对模型进行指令微调，获得最终模型。
 
-   - `arXiv 23` **MoDS: Model-oriented Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/CASIA-LM/MoDS)[Qianlong Du, Chengqing Zong and Jiajun Zhang] **MoDS方法主要通过质量、覆盖范围、必要性三个指标来进行数据的筛选，其中数据质量是为了保证所选的指令数据的问题和答案都足够好；数据覆盖范围是为了让所选择的数据中指令足够多样、涉及知识范围更广；数据必要性是选择对于大模型较复杂、较难或不擅长的数据以填补大模型能力的空白。**
+- `ICLR 2024` **WHAT MAKES GOOD DATA FOR ALIGNMENT?A COMPREHENSIVE STUDY OF AUTOMATIC DATA SELECTION IN INSTRUCTION TUNING** [[paper](https://arxiv.org/pdf/2311.15653.pdf)][[code](https://github.com/hkust-nlp/deit)][Wei Liu, Weihao Zeng  Keqing He Yong Jiang Junxian He] **DEITA方法使用数据进行复杂性和质量评分，再通过多样性进行数据筛选。**
+
+     - **总体架构:**
+
+       ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/5ad1171c-9353-45bb-aa07-42ca652deb28)
+
+       见:https://mp.weixin.qq.com/s/IqwP6cfsmPNduq_5Il7pow
+
+- `EACL 23` **Investigating Multi-source Active Learning for Natural Language Infer**
+
 
 
 
