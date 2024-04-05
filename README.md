@@ -173,18 +173,12 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
   **具体算法：**
    - **不确定性测量：**
      最大熵（ME）和预测熵（PE）都是用来评估模型预测的不确定性的指标，但它们在方法和所包含的信息方面有所不同。
-
-        最大熵（ME）以其与黄金响应的独立性为特征。它通过计算所有可能结果的熵，定量评估模型预测的不确定性，公式如下：
      
-        $$
-\text{ME}(s, x) = - \sum_{i=1}^{N} \sum_{j=1}^{V} p(v_{ij}|s<i, x) \log p(v_{ij}|s<i, x)
-$$
+        ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/90d762cf-ad0a-45fa-a6ea-b41ef2e1408c)
+        ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/cf61142d-7378-48eb-98be-237f4639e055)
 
-        其中，\( s \) 是生成的响应，\( p(v_{ij}|s<i, x) \) 是在 \( s \) 的第 \( i \) 个元素中词汇表的第 \( j \) 个标记的概率，\( V \) 是词汇表的大小。
-        预测熵（PE）融入了对黄金响应的依赖性，提供了给定预测分布的真实标签的预期信息增益的度量，其公式如下：
-        \[ PE(s, x) = - \log p(s|x) = \sum_{i=1}^{N} - \log p(z_i|s<i, x) \]
-        其中，\( s \) 是黄金响应，\( p(z_i|s<i, x) \) 是在黄金响应的第 \( i \) 个标记的概率。
-        因此，ME和PE都用于评估模型预测的不确定性，但ME独立于真实标签，而PE考虑了真实标签的影响。
+
+       
      
    - **动态不确定性测量(Dynamic Uncertainty Measurement)：**
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/152198b7-f797-41fd-ae2f-fc77c9654fc4)
@@ -197,14 +191,42 @@ $$
      对高斯随机初始化的A矩阵，使用蒙特卡洛dropout机制
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/48d8756d-1000-476a-ac84-52a2a573abf6)
 
-
-      
- 
-
-       
-- 
+ - `NAACL 24` **From Quantity to Quality: Boosting LLM Performance with Self-Guided Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2308.12032.pdf)][[code](https://github.com/tianyi-lab/Cherry_LLM)][Ming Li1, Yong Zhang, Zhitao Li, Jiuhai Chen, Lichang Chen, Ning Cheng, Jianzong Wang, Tianyi Zhou, Jing Xiao] **这篇论文不是严格意义上的主动学习样本选择的论文(你可以理解为这篇论文的active learning迭代次数是2），但是其中的内核跟主动学习基于不确定性的方法大同小异，主要思想是提出一个指令随难度指标(Instruction-Following Difficulty，IFD),通过该指标来筛选具有增强LLM指令调优潜力的数据样例（樱桃数据，cherry data）**
 
 
+   
+   
+   **总体方法:**
+       ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/31dee965-aee1-42e8-b541-3599781f2fb7)
+   
+   - Learning from Brief Experience：利用少量进行进行模型初学：
+
+        这个阶段的目标是通过强制模型首先体验目标数据集的一个子集来为初始模型提供基本的指令遵循能力。具体来说，对于初始的完整目标数据集 $D_0$ 包含 $n$ 个三元组 $x = (\text{Instruction}, [\text{Input}], \text{Answer})$，我们定义字符串 $Question =             \text{map(Instruction, [Input])}$ 作为完整指令。map 函数与原始目标数据集对齐。然后，对于每个样本 $x_j$，指令嵌入通过以下方式获得：
+        
+        $$[h^Q_{j,1}, \ldots, h^Q_{j,m}] = {LLM}_{\theta_{0}}(w^Q_{j,1}, \ldots, w^Q_{j,m})$$
+   
+        $$h^Q_{j} = \frac{1}{m} \sum_{i=1}^{m} h_{Qj,i}$$
+
+
+        其中 $w^Q_{j,i}$ 表示样本 $j$ 的指令字符串的第 $i$ 个单词，$h^Q_{j,i}$ 表示其对应的最后隐藏状态。为了确保初始模型暴露给多样化的指令，利用基本的聚类技术 $KMeans$ 对这些指令嵌入进行聚类。受LIMA发现的启发，希望通过在每个聚类中仅采样少量实 
+        例使这个体验过程尽可能简短。具体在指令嵌入上生成100个聚类，并在每个聚类中采样10个实例。然后，初始模型仅使用这些样本进行1个epoch的训练，以获得简要的预体验模型。
+   
+
+   
+       - Evaluating Based on Experience：利用初学模型计算原始数据中所有IFD指标:
+    
+         以下是提取出的4个公式最终可以计算得出IFD值：
+         
+         ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/3f783cd9-53af-4a6a-b369-01499b8d3a61)
+         ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/d1cc192a-39b7-413b-8164-367b1e15ba8c)
+         ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/7ca9546c-3d66-490f-8996-54d29a331deb)
+         ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/c9632a01-de8e-4db6-a8f7-be34817d8a2f)
+         
+         通过排序得到IFD最大的比例的数值对应的样本放入模型进行训练（IFD越高表示该prompt的难道越高，即模型越难完成该任务）
+
+   **更多信息可以参考:https://zhuanlan.zhihu.com/p/664562587**
+
+    - `arXiv 23` ****
 
 
 
