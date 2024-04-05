@@ -183,9 +183,11 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
      
    - **动态不确定性测量(Dynamic Uncertainty Measurement)：**
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/152198b7-f797-41fd-ae2f-fc77c9654fc4)
+     
      简单来说 样本不确定性的测量的指标由基础模型跟当前微调模型加权得到，随着迭代次数提高，基础模型权重更低，而当前微调模型权重更高
 
    - **混合正则化方法进行模型校准(Calibration with Hybrid Regularization):**
+   - 
      对零初始化B矩阵，使用L2范数权重衰减
      
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/08beaba8-081c-4e1e-be28-c0cf30a41254)
@@ -204,7 +206,7 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
    
    - Learning from Brief Experience：利用少量进行进行模型初学：
 
-        这个阶段的目标是通过强制模型首先体验目标数据集的一个子集来为初始模型提供基本的指令遵循能力。具体来说，对于初始的完整目标数据集 $D_0$ 包含 $n$ 个三元组 $x = (\text{Instruction}, [\text{Input}], \text{Answer})$，我们定义字符串 $Question =             \text{map(Instruction, [Input])}$ 作为完整指令。map 函数与原始目标数据集对齐。然后，对于每个样本 $x_j$，指令嵌入通过以下方式获得：
+        这个阶段的目标是通过强制模型首先体验目标数据集的一个子集来为初始模型提供基本的指令遵循能力。具体来说，对于初始的完整目标数据集 $D_0$ 包含 $n$ 个三元组 $x = (\text{Instruction}, [\text{Input}], \text{Answer})$，我们定义字符串 $Question =    \text{map(Instruction, [Input])}$ 作为完整指令。map 函数与原始目标数据集对齐。然后，对于每个样本 $x_j$，指令嵌入通过以下方式获得：
         
         $$[h^Q_{j,1}, \ldots, h^Q_{j,m}] = {LLM}_{\theta_{0}}(w^Q_{j,1}, \ldots, w^Q_{j,m})$$
    
