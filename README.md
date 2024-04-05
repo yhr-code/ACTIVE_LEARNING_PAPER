@@ -172,6 +172,7 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
  
   **具体算法：**
    - **不确定性测量：**
+   - 
      最大熵（ME）和预测熵（PE）都是用来评估模型预测的不确定性的指标，但它们在方法和所包含的信息方面有所不同。
      
         ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/90d762cf-ad0a-45fa-a6ea-b41ef2e1408c)
@@ -186,9 +187,11 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
 
    - **混合正则化方法进行模型校准(Calibration with Hybrid Regularization):**
      对零初始化B矩阵，使用L2范数权重衰减
+     
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/08beaba8-081c-4e1e-be28-c0cf30a41254)
 
      对高斯随机初始化的A矩阵，使用蒙特卡洛dropout机制
+     
      ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/48d8756d-1000-476a-ac84-52a2a573abf6)
 
  - `NAACL 24` **From Quantity to Quality: Boosting LLM Performance with Self-Guided Data Selection for Instruction Tuning** [[paper](https://arxiv.org/pdf/2308.12032.pdf)][[code](https://github.com/tianyi-lab/Cherry_LLM)][Ming Li1, Yong Zhang, Zhitao Li, Jiuhai Chen, Lichang Chen, Ning Cheng, Jianzong Wang, Tianyi Zhou, Jing Xiao] **这篇论文不是严格意义上的主动学习样本选择的论文(你可以理解为这篇论文的active learning迭代次数是2），但是其中的内核跟主动学习基于不确定性的方法大同小异，主要思想是提出一个指令随难度指标(Instruction-Following Difficulty，IFD),通过该指标来筛选具有增强LLM指令调优潜力的数据样例（樱桃数据，cherry data）**
