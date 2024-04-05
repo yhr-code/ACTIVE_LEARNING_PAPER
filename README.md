@@ -249,10 +249,14 @@ Eg. `ACL-2023` **Title** [paper] [code] .. [authors][![](https://img.shields.io/
        ![image](https://github.com/yhr-code/ACTIVE_LEARNING_PAPER/assets/84458746/5ad1171c-9353-45bb-aa07-42ca652deb28)
 
        见:https://mp.weixin.qq.com/s/IqwP6cfsmPNduq_5Il7pow
+       
+- `arXiv 24` **Clustering and Ranking: Diversity-preserved Instruction Selection through Expert-aligned Quality Estimation**
 
 - `EACL 23` **Investigating Multi-source Active Learning for Natural Language Infer**
 
-
+- `arXiv 24` **Towards Efficient Active Learning in NLP via Pretrained Representations**
+  
+- `arXiv 24` **Hallucination Diversity-Aware Active Learning for Text Summarization**
 
 
 ### L2D(Learning_to_defer)
